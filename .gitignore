@@ -1,3 +1,8 @@
 *.exe
 *.o
-test_*
+*.out
+/build/
+test_vector
+test_sort_search
+test_sort_search.exe
+test_vector.exe
