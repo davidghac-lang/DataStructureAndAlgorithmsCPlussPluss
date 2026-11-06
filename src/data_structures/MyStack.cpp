@@ -27,7 +27,6 @@ bool MyStack<TypeName>::isThere(const TypeName& something) const { Node* current
 template<class TypeName>
 MyStack<int> MyStack<TypeName>::getWhere(const TypeName& something) const { MyStack<int> result; Node* current = head; int index = 0; while (current != nullptr) { if (current->data == something) result.push(index); current = current->next; index++; } return result; }
 template<class TypeName>
-MyStack<TypeName>::template <typename TypeName>
 MyStack<TypeName>::MyStack(const MyStack<TypeName>& other) {
     head = nullptr;
     size = 0;
@@ -37,18 +36,18 @@ MyStack<TypeName>::MyStack(const MyStack<TypeName>& other) {
     }
 
     // 1. Copy first node - this will be our head forever
-    head = new Node<TypeName>();
+    head = new Node();
     head->data = other.head->data;
     head->next = nullptr;
     size = 1;
 
     // 2. Two pointers: one to read from 'other', one to write in 'this'
-    Node<TypeName>* other_current = other.head->next; // read
-    Node<TypeName>* my_tail = head; // write - tail moves, head stays!
+    Node* other_current = other.head->next; // read
+    Node* my_tail = head; // write - tail moves, head stays!
 
     // 3. Copy rest of nodes one by one
     while (other_current != nullptr) {
-        Node<TypeName>* new_node = new Node<TypeName>();
+        Node* new_node = new Node();
         new_node->data = other_current->data;
         new_node->next = nullptr;
 
@@ -60,7 +59,7 @@ MyStack<TypeName>::MyStack(const MyStack<TypeName>& other) {
     }
 }
 template<class TypeName>
-void MyStack<TypeName>::clear(Node<TypeName> *tail) {
+void MyStack<TypeName>::clear(Node *tail) {
     if (tail != nullptr) {
         clear(tail->next);
     }
