@@ -9,14 +9,16 @@ private:
     Node* head;
     int size;
 public:
-    MyStack(){ head=nullptr; size=0; }
-    ~MyStack(){ while(head!=nullptr){ Node* t=head; head=head->next; delete t; } }
-    void push(TypeName d){ Node* n=new Node(); n->data=d; n->next=head; head=n; size++; }
-    TypeName pop(){ if(isEmpty()) throw std::out_of_range("empty"); Node* t=head; TypeName v=head->data; head=head->next; delete t; size--; return v; }
-    TypeName top(){ if(head!=nullptr) return head->data; throw std::out_of_range("empty"); }
-    bool isEmpty(){ return head==nullptr; }
-    int getSize(){ return size; }
-    bool isThere(const TypeName& s) const { Node* c=head; while(c!=nullptr){ if(c->data==s) return true; c=c->next; } return false; }
-    MyStack<int> getWhere(const TypeName& s) const { MyStack<int> r; Node* c=head; int i=0; while(c!=nullptr){ if(c->data==s) r.push(i); c=c->next; i++; } return r; }
+    MyStack();
+    ~MyStack();
+    void push(TypeName data);
+    TypeName pop();
+    TypeName top();
+    bool isEmpty();
+    int getSize();
+    bool isThere(const TypeName& something) const;
+    MyStack<int> getWhere(const TypeName& something) const;
 };
+
+#include "../src/data_structures/MyStack.cpp"
 #endif
