@@ -10,6 +10,7 @@ private:
     int size;
 public:
     MyStack();
+    MyStack(const MyStack<TypeName>& other);
     ~MyStack();
     void push(TypeName data);
     TypeName pop();
