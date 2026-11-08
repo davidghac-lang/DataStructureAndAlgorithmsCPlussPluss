@@ -1,18 +1,26 @@
-// Node.h
+#pragma once
+
 template<class TypeName>
 class Node {
 private:
     TypeName data;
-    Node<TypeName>* pointer1; // Next / Left / LevelNext
-    Node<TypeName>* pointer2; // Prev / Right / LevelPrev
-    Node<TypeName>* pointer3; // Current / End / Parent / LeftChild
+    Node<TypeName>* pointer1;
+    Node<TypeName>* pointer2;
+    Node<TypeName>* pointer3;
 
 public:
-    Node(const TypeName& data) {
-        this->data = data;
-        this->pointer1 = nullptr;
-        this->pointer2 = nullptr;
-        this->pointer3 = nullptr;
+    Node() {
+        data = TypeName();
+        pointer1 = nullptr;
+        pointer2 = nullptr;
+        pointer3 = nullptr;
+    }
+
+    Node(const TypeName& new_data) {
+        data = new_data;
+        pointer1 = nullptr;
+        pointer2 = nullptr;
+        pointer3 = nullptr;
     }
 
     TypeName GetData() { return data; }
@@ -20,7 +28,8 @@ public:
     Node<TypeName>* GetPointer2() { return pointer2; }
     Node<TypeName>* GetPointer3() { return pointer3; }
 
-    void SetPointer1(Node<TypeName>* p) { pointer1 = p; }
-    void SetPointer2(Node<TypeName>* p) { pointer2 = p; }
-    void SetPointer3(Node<TypeName>* p) { pointer3 = p; }
+    void SetData(const TypeName& new_data) { data = new_data; }
+    void SetPointer1(Node<TypeName>* new_p) { pointer1 = new_p; }
+    void SetPointer2(Node<TypeName>* new_p) { pointer2 = new_p; }
+    void SetPointer3(Node<TypeName>* new_p) { pointer3 = new_p; }
 };

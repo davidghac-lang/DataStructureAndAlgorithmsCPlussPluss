@@ -1,108 +1,397 @@
-// Trees/ChristmasTree.h
+//// PowerOfThreePointers/Trees/ChristmasTree.h - Snake Style
+//#pragma once
+//#include "../Core/SuperContainer.h"
+//#include <iostream>
+//
+//template<class TypeName>
+//class ChristmasTree : public SuperContainer<TypeName> {
+//private:
+//    void clear_tree(Node<TypeName>* root_node) {
+//        if (root_node == nullptr) return;
+//        
+//        Node<TypeName>* child_node = root_node->GetPointer3(); // P3 = LeftChild
+//        while (child_node != nullptr) {
+//            Node<TypeName>* next_brother = child_node->GetPointer1(); // P1 = LevelNext
+//            clear_tree(child_node);
+//            child_node = next_brother;
+//        }
+//        delete root_node;
+//    }
+//
+//public:
+//    ChristmasTree() : SuperContainer<TypeName>() {}
+//
+//    ~ChristmasTree() {
+//        Clear();
+//    }
+//
+//    // YOUR TRICK MAPPING:
+//    // P1 = LevelNext (next brother on same level)
+//    // P2 = LevelPrev (prev brother)
+//    // P3 = LeftChild (first child)
+//
+//    Node<TypeName>* GetLeftChild(Node<TypeName>* parent_node) {
+//        return parent_node->GetPointer3();
+//    }
+//
+//    Node<TypeName>* GetRightChild(Node<TypeName>* left_child_node) {
+//        // TRICK: Right = Left->P1
+//        if (left_child_node == nullptr) return nullptr;
+//        return left_child_node->GetPointer1();
+//    }
+//
+//    Node<TypeName>* GetLevelNext(Node<TypeName>* curr_node) {
+//        return curr_node->GetPointer1();
+//    }
+//
+//    Node<TypeName>* GetLevelPrev(Node<TypeName>* curr_node) {
+//        return curr_node->GetPointer2();
+//    }
+//
+//    virtual int Add(const TypeName& data, int where) override {
+//        Node<TypeName>* new_node = new Node<TypeName>(data);
+//
+//        if (this->head == nullptr) {
+//            // First node = root
+//            this->head = new_node;
+//            this->current = new_node;
+//            this->end = new_node;
+//            this->count = 1;
+//            return 0;
+//        }
+//
+//        // where = parent index, find parent
+//        Node<TypeName>* parent_node = this->head;
+//        // Simple: add as child of current for now
+//        if (this->current != nullptr) {
+//            parent_node = this->current;
+//        }
+//
+//        Node<TypeName>* first_child = parent_node->GetPointer3();
+//
+//        if (first_child == nullptr) {
+//            // No child yet, this is left child
+//            parent_node->SetPointer3(new_node);
+//        } else {
+//            // Has children, add as next brother to last child
+//            Node<TypeName>* last_brother = first_child;
+//            while (last_brother->GetPointer1() != nullptr) {
+//                last_brother = last_brother->GetPointer1();
+//            }
+//            last_brother->SetPointer1(new_node); // P1 = LevelNext
+//            new_node->SetPointer2(last_brother); // P2 = LevelPrev
+//        }
+//
+//        this->current = new_node;
+//        this->end = new_node;
+//        this->count++;
+//        return 0;
+//    }
+//
+//    virtual int Remove(int where) override {
+//        // TODO for Day 5
+//        return -1;
+//    }
+//
+//    virtual bool IsEmpty() override {
+//        return this->head == nullptr;
+//    }
+//
+//    virtual int Clear() override {
+//        clear_tree(this->head);
+//        this->head = nullptr;
+//        this->current = nullptr;
+//        this->end = nullptr;
+//        this->count = 0;
+//        return 0;
+//    }
+//
+//    virtual TypeName Peek() override {
+//        if (this->current) return this->current->GetData();
+//        if (this->head) return this->head->GetData();
+//        return TypeName();
+//    }
+//
+//    virtual int Size() override {
+//        return this->count;
+//    }
+//
+//    void PrintLevel(Node<TypeName>* level_head) {
+//        Node<TypeName>* curr_node = level_head;
+//        std::cout << "Level: ";
+//        while (curr_node != nullptr) {
+//            std::cout << curr_node->GetData() << " ";
+//            curr_node = curr_node->GetPointer1();
+//        }
+//        std::cout << std::endl;
+//    }
+//
+//    void PrintTree(Node<TypeName>* root_node, int depth_level) {
+//        if (root_node == nullptr) return;
+//
+//        for (int i = 0; i < depth_level; i++) std::cout << "  ";
+//        std::cout << root_node->GetData() << std::endl;
+//
+//        Node<TypeName>* child_node = root_node->GetPointer3();
+//        while (child_node != nullptr) {
+//            PrintTree(child_node, depth_level + 1);
+//            child_node = child_node->GetPointer1();
+//        }
+//    }
+//
+//    void Print() {
+//        PrintTree(this->head, 0);
+//    }
+//};
+// PowerOfThreePointers/Trees/ChristmasTree.h - Snake Style
+//#pragma once
+//#include "../Core/SuperContainer.h"
+//#include <iostream>
+//
+//template<class TypeName>
+//class ChristmasTree : public SuperContainer<TypeName> {
+//private:
+//    void clear_tree(Node<TypeName>* root_node) {
+//        if (root_node == nullptr) return;
+//
+//        Node<TypeName>* child_node = root_node->GetPointer3(); // P3 = LeftChild
+//        while (child_node != nullptr) {
+//            Node<TypeName>* next_brother = child_node->GetPointer1(); // P1 = LevelNext
+//            clear_tree(child_node);
+//            child_node = next_brother;
+//        }
+//        delete root_node;
+//    }
+//
+//public:
+//    ChristmasTree() : SuperContainer<TypeName>() {}
+//
+//    ~ChristmasTree() {
+//        Clear();
+//    }
+//
+//    // YOUR TRICK MAPPING:
+//    // P1 = LevelNext (next brother on same level)
+//    // P2 = LevelPrev (prev brother)
+//    // P3 = LeftChild (first child)
+//
+//    Node<TypeName>* GetLeftChild(Node<TypeName>* parent_node) {
+//        return parent_node->GetPointer3();
+//    }
+//
+//    Node<TypeName>* GetRightChild(Node<TypeName>* left_child_node) {
+//        // TRICK: Right = Left->P1
+//        if (left_child_node == nullptr) return nullptr;
+//        return left_child_node->GetPointer1();
+//    }
+//
+//    Node<TypeName>* GetLevelNext(Node<TypeName>* curr_node) {
+//        return curr_node->GetPointer1();
+//    }
+//
+//    Node<TypeName>* GetLevelPrev(Node<TypeName>* curr_node) {
+//        return curr_node->GetPointer2();
+//    }
+//
+//    virtual int Add(const TypeName& data, int where) override {
+//        Node<TypeName>* new_node = new Node<TypeName>(data);
+//
+//        if (this->head == nullptr) {
+//            // First node = root
+//            this->head = new_node;
+//            this->current = new_node;
+//            this->end = new_node;
+//            this->count = 1;
+//            return 0;
+//        }
+//
+//        // where = parent index, find parent
+//        Node<TypeName>* parent_node = this->head;
+//        // Simple: add as child of current for now
+//        if (this->current != nullptr) {
+//            parent_node = this->current;
+//        }
+//
+//        Node<TypeName>* first_child = parent_node->GetPointer3();
+//
+//        if (first_child == nullptr) {
+//            // No child yet, this is left child
+//            parent_node->SetPointer3(new_node);
+//        }
+//        else {
+//            // Has children, add as next brother to last child
+//            Node<TypeName>* last_brother = first_child;
+//            while (last_brother->GetPointer1() != nullptr) {
+//                last_brother = last_brother->GetPointer1();
+//            }
+//            last_brother->SetPointer1(new_node); // P1 = LevelNext
+//            new_node->SetPointer2(last_brother); // P2 = LevelPrev
+//        }
+//
+//        this->current = new_node;
+//        this->end = new_node;
+//        this->count++;
+//        return 0;
+//    }
+//
+//    virtual int Remove(int where) override {
+//        // TODO for Day 5
+//        return -1;
+//    }
+//
+//    virtual bool IsEmpty() override {
+//        return this->head == nullptr;
+//    }
+//
+//    virtual int Clear() override {
+//        clear_tree(this->head);
+//        this->head = nullptr;
+//        this->current = nullptr;
+//        this->end = nullptr;
+//        this->count = 0;
+//        return 0;
+//    }
+//
+//    virtual TypeName Peek() override {
+//        if (this->current) return this->current->GetData();
+//        if (this->head) return this->head->GetData();
+//        return TypeName();
+//    }
+//
+//    virtual int Size() override {
+//        return this->count;
+//    }
+//
+//    void PrintLevel(Node<TypeName>* level_head) {
+//        Node<TypeName>* curr_node = level_head;
+//        std::cout << "Level: ";
+//        while (curr_node != nullptr) {
+//            std::cout << curr_node->GetData() << " ";
+//            curr_node = curr_node->GetPointer1();
+//        }
+//        std::cout << std::endl;
+//    }
+//
+//    void PrintTree(Node<TypeName>* root_node, int depth_level) {
+//        if (root_node == nullptr) return;
+//
+//        for (int i = 0; i < depth_level; i++) std::cout << "  ";
+//        std::cout << root_node->GetData() << std::endl;
+//
+//        Node<TypeName>* child_node = root_node->GetPointer3();
+//        while (child_node != nullptr) {
+//            PrintTree(child_node, depth_level + 1);
+//            child_node = child_node->GetPointer1();
+//        }
+//    }
+//
+//    void Print() {
+//        PrintTree(this->head, 0);
+//    }
+//};
+
 #pragma once
 #include "../Core/SuperContainer.h"
-#include <queue>
 #include <iostream>
-
-template<class TypeName>
-class LevelInfo {
-private:
-    int levelNumber;
-    Node<TypeName>* levelHead;
-    Node<TypeName>* levelEnd;
-    int levelCount;
-public:
-    LevelInfo(int level) {
-        levelNumber = level;
-        levelHead = nullptr;
-        levelEnd = nullptr;
-        levelCount = 0;
-    }
-    Node<TypeName>* GetLevelHead() { return levelHead; }
-    Node<TypeName>* GetLevelEnd() { return levelEnd; }
-    int GetLevelCount() { return levelCount; }
-    void SetLevelHead(Node<TypeName>* h) { levelHead = h; }
-    void SetLevelEnd(Node<TypeName>* e) { levelEnd = e; }
-    void IncCount() { levelCount++; }
-};
 
 template<class TypeName>
 class ChristmasTree : public SuperContainer<TypeName> {
 private:
-    LevelInfo<TypeName>** levels;
-    int maxLevel;
-    int treeHeight;
-
-    Node<TypeName>* FindNode(const TypeName& data) {
-        if (this->head == nullptr) return nullptr;
-        std::queue<Node<TypeName>*> q;
-        q.push(this->head);
-        while (!q.empty()) {
-            Node<TypeName>* curr = q.front(); q.pop();
-            if (curr->GetData() == data) return curr;
-            Node<TypeName>* child = curr->GetPointer3();
-            while (child != nullptr) {
-                q.push(child);
-                child = child->GetPointer1();
-            }
+    void clear_tree(Node<TypeName>* root_node) {
+        if (root_node == nullptr) return;
+        Node<TypeName>* child_node = root_node->GetPointer3();
+        while (child_node != nullptr) {
+            Node<TypeName>* next_brother = child_node->GetPointer1();
+            clear_tree(child_node);
+            child_node = next_brother;
         }
-        return nullptr;
+        delete root_node;
     }
 
 public:
-    ChristmasTree() : SuperContainer<TypeName>() {
-        maxLevel = 100;
-        levels = new LevelInfo<TypeName>*[maxLevel];
-        for (int i = 0;i < maxLevel;i++) levels[i] = nullptr;
-        treeHeight = 0;
-        levels[0] = new LevelInfo<TypeName>(0);
+    ChristmasTree() : SuperContainer<TypeName>() {}
+    ~ChristmasTree() { Clear(); }
+
+    Node<TypeName>* GetHead() { return this->head; }
+    Node<TypeName>* GetCurrent() { return this->current; }
+    Node<TypeName>* GetEnd() { return this->end; }
+
+    Node<TypeName>* GetLeftChild(Node<TypeName>* parent_node) {
+        return parent_node->GetPointer3();
     }
 
-    virtual int Add(const TypeName& data, int where) override { return 0; }
-    virtual int Remove(int where) override { return 0; }
-    virtual bool IsEmpty() override { return this->head == nullptr; }
-    virtual int Clear() override { return 0; }
-    virtual TypeName Peek() override { return this->head->GetData(); }
-    virtual int Size() override { return this->count; }
-
-    // YOUR MAPPING: P1=LevelNext, P2=LevelPrev, P3=LeftChild
-    Node<TypeName>* GetLeftChild(Node<TypeName>* p) { return p->GetPointer3(); }
-    Node<TypeName>* GetRightChild(Node<TypeName>* p) {
-        Node<TypeName>* left = p->GetPointer3();
-        if (!left) return nullptr;
-        return left->GetPointer1(); // TRICK: Right = Left->P1
+    Node<TypeName>* GetRightChild(Node<TypeName>* left_child_node) {
+        if (left_child_node == nullptr) return nullptr;
+        return left_child_node->GetPointer1();
     }
 
-    int AddRoot(const TypeName& data) {
-        Node<TypeName>* n = new Node<TypeName>(data);
-        this->head = n; this->end = n; this->current = n; this->count = 1;
-        levels[0]->SetLevelHead(n); levels[0]->SetLevelEnd(n); levels[0]->IncCount();
-        return 0;
+    Node<TypeName>* GetLevelNext(Node<TypeName>* curr_node) {
+        return curr_node->GetPointer1();
     }
 
-    int AddChild(const TypeName& parentData, const TypeName& childData) {
-        Node<TypeName>* parent = FindNode(parentData);
-        if (!parent) return -1;
-        Node<TypeName>* n = new Node<TypeName>(childData);
-        if (parent->GetPointer3() == nullptr) parent->SetPointer3(n);
-        else {
-            Node<TypeName>* last = parent->GetPointer3();
-            while (last->GetPointer1() != nullptr) last = last->GetPointer1();
-            last->SetPointer1(n); n->SetPointer2(last);
+    Node<TypeName>* GetLevelPrev(Node<TypeName>* curr_node) {
+        return curr_node->GetPointer2();
+    }
+
+    virtual int Add(const TypeName& data, int where) override {
+        Node<TypeName>* new_node = new Node<TypeName>(data);
+        if (this->head == nullptr) {
+            this->head = new_node;
+            this->current = new_node;
+            this->end = new_node;
+            this->count = 1;
+            return 0;
         }
+        Node<TypeName>* parent_node = this->current;
+        if (parent_node == nullptr) parent_node = this->head;
+        Node<TypeName>* first_child = parent_node->GetPointer3();
+        if (first_child == nullptr) {
+            parent_node->SetPointer3(new_node);
+        }
+        else {
+            Node<TypeName>* last_brother = first_child;
+            while (last_brother->GetPointer1() != nullptr) {
+                last_brother = last_brother->GetPointer1();
+            }
+            last_brother->SetPointer1(new_node);
+            new_node->SetPointer2(last_brother);
+        }
+        this->current = new_node;
+        this->end = new_node;
         this->count++;
         return 0;
     }
 
-    void PrintTree() {
-        if (!this->head) return;
-        std::queue<Node<TypeName>*> q; q.push(this->head);
-        while (!q.empty()) {
-            Node<TypeName>* curr = q.front(); q.pop();
-            std::cout << curr->GetData() << " -> children: ";
-            Node<TypeName>* child = curr->GetPointer3();
-            while (child) { std::cout << child->GetData() << " "; q.push(child); child = child->GetPointer1(); }
-            std::cout << std::endl;
+    virtual int Remove(int where) override { return -1; }
+    virtual bool IsEmpty() override { return this->head == nullptr; }
+
+    virtual int Clear() override {
+        clear_tree(this->head);
+        this->head = nullptr;
+        this->current = nullptr;
+        this->end = nullptr;
+        this->count = 0;
+        return 0;
+    }
+
+    virtual TypeName Peek() override {
+        if (this->current) return this->current->GetData();
+        if (this->head) return this->head->GetData();
+        return TypeName();
+    }
+
+    virtual int Size() override { return this->count; }
+
+    void PrintTree(Node<TypeName>* root_node, int depth_level) {
+        if (root_node == nullptr) return;
+        for (int i = 0; i < depth_level; i++) std::cout << "  ";
+        std::cout << root_node->GetData() << std::endl;
+        Node<TypeName>* child_node = root_node->GetPointer3();
+        while (child_node != nullptr) {
+            PrintTree(child_node, depth_level + 1);
+            child_node = child_node->GetPointer1();
         }
     }
+
+    void Print() { PrintTree(this->head, 0); }
 };
