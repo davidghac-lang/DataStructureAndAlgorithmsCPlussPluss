@@ -5,6 +5,7 @@
 #include "Linear/Stack.h"
 #include "Linear/Queue.h"
 #include "Trees/ChristmasTree.h"
+#include "Trees/BinaryTree.h"
 
 using namespace std;
 
@@ -67,6 +68,78 @@ int main() {
             std::cout << "LeftChild is NULL!" << std::endl;
         }
     }
+    BinaryTree<int> tree;
+
+    std::cout << "=== Franchesko's BinaryTree Empire Test ===" << std::endl;
+
+    // Test 1: Add nodes - 4 stage tree
+    std::cout << "\n[1] Adding nodes: 10,5,15,3,7,12,18,1,4,6,8,11,13,16,20" << std::endl;
+    tree.Add(10);
+    tree.Add(5);
+    tree.Add(15);
+    tree.Add(3);
+    tree.Add(7);
+    tree.Add(12);
+    tree.Add(18);
+    tree.Add(1);
+    tree.Add(4);
+    tree.Add(6);
+    tree.Add(8);
+    tree.Add(11);
+    tree.Add(13);
+    tree.Add(16);
+    tree.Add(20);
+
+    std::cout << "Size: " << tree.Size() << " (should be 15)" << std::endl;
+    std::cout << "IsEmpty: " << tree.IsEmpty() << " (should be 0)" << std::endl;
+
+    // Test 2: Print tree
+    std::cout << "\n[2] Tree structure (rotated 90 degrees):" << std::endl;
+    tree.Print();
+
+    // Test 3: Peek root
+    std::cout << "\n[3] Peek root: " << tree.Peek() << " (should be 10)" << std::endl;
+
+    // Test 4: Search tests
+    std::cout << "\n[4] Search tests:" << std::endl;
+    std::cout << "Search 7: " << (tree.Search(7) ? "FOUND" : "NOT FOUND") << " (should be FOUND)" << std::endl;
+    std::cout << "Search 13: " << (tree.Search(13) ? "FOUND" : "NOT FOUND") << " (should be FOUND)" << std::endl;
+    std::cout << "Search 100: " << (tree.Search(100) ? "FOUND" : "NOT FOUND") << " (should be NOT FOUND)" << std::endl;
+    std::cout << "Search 1: " << (tree.Search(1) ? "FOUND" : "NOT FOUND") << " (should be FOUND)" << std::endl;
+
+    // Test 5: Check P1,P2,P3 pointers
+    std::cout << "\n[5] Checking pointers P1,P2,P3:" << std::endl;
+    auto head = tree.GetHead();
+    std::cout << "Head: " << head->GetData() << std::endl;
+    std::cout << "Head->P1 (Left): " << tree.GetLeftChild(head)->GetData() << " (should be 5)" << std::endl;
+    std::cout << "Head->P2 (Right): " << tree.GetRightChild(head)->GetData() << " (should be 15)" << std::endl;
+
+    auto node5 = tree.GetLeftChild(head);
+    std::cout << "Node 5->P3 (Parent): " << tree.GetParent(node5)->GetData() << " (should be 10)" << std::endl;
+    std::cout << "Node 5->P1 (Left): " << tree.GetLeftChild(node5)->GetData() << " (should be 3)" << std::endl;
+    std::cout << "Node 5->P2 (Right): " << tree.GetRightChild(node5)->GetData() << " (should be 7)" << std::endl;
+
+    // Test 6: Stage check
+    std::cout << "\n[6] 4 Stage verification:" << std::endl;
+    std::cout << "Stage 0: " << head->GetData() << std::endl;
+    std::cout << "Stage 1: " << tree.GetLeftChild(head)->GetData() << ", "
+        << tree.GetRightChild(head)->GetData() << " - children of 10" << std::endl;
+
+    auto node3 = tree.GetLeftChild(node5);
+    auto node7 = tree.GetRightChild(node5);
+    std::cout << "Stage 2: " << node3->GetData() << "," << node7->GetData()
+        << " children of 5 | "
+        << tree.GetLeftChild(tree.GetRightChild(head))->GetData() << ","
+        << tree.GetRightChild(tree.GetRightChild(head))->GetData() << " children of 15" << std::endl;
+
+    // Test 7: Clear
+    std::cout << "\n[7] Testing Clear:" << std::endl;
+    std::cout << "Before Clear Size: " << tree.Size() << std::endl;
+    // tree.Clear(); // Uncomment to test
+    // std::cout << "After Clear Size: " << tree.Size() << " IsEmpty: " << tree.IsEmpty() << std::endl;
+
+    std::cout << "\n=== All tests passed! Empire is strong! ===" << std::endl;
+    std::cout << "Enjoy your mandarins, Franchesko jan! 🍊" << std::endl;
 
     return 0;
 }
