@@ -45,7 +45,7 @@ public:
         count = 0;
     }
     virtual ~SuperContainer() {}
-    virtual int Add(const TypeName& data, int where) = 0;
+    virtual int Add(const TypeName& data, int where = 0) = 0;
     virtual int Remove(int where) = 0;
     virtual bool IsEmpty() = 0;
     virtual int Clear() = 0;

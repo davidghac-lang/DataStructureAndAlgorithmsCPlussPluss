@@ -10,17 +10,7 @@ public:
 
     ~Stack()
     {
-        Node<TypeName>* curr_node = this->head;
-        while (curr_node != nullptr)
-        {
-            Node<TypeName>* next_node = curr_node->GetPointer1();
-            delete curr_node;
-            curr_node = next_node;
-        }
-        this->head = nullptr;
-        this->current = nullptr;
-        this->end = nullptr;
-        this->count = 0;
+        Clear();
     }
 
     virtual int Add(const TypeName& data, int where = 0) override
@@ -49,10 +39,7 @@ public:
         return 0;
     }
 
-    virtual TypeName Remove(int where = 0) override
-    {
-        return Pop();
-    }
+    virtual int Remove(int where = 0) override { Pop(); return 0; }
 
     virtual bool IsEmpty() override { return this->head == nullptr; }
 
