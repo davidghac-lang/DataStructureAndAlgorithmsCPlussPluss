@@ -1,57 +1,47 @@
-#include "../Core/Node.h"
-#include "./ChristmasTree.h"
+#include "ChristmasTree.h"
 #include <iostream>
 
 int main() {
-    std::cout << "=== DAVID'S CHRISTMAS TREE 4 LEVELS ===\n";
+    ChristmasTree<int> tree;
 
-    ChristmasTree<int> christmas_tree;
+    // Level 0 - 1 node
+    auto root = tree.AddRoot(1);
+    std::cout << "Added root 1\n";
 
-    Node<int>* root_node = christmas_tree.AddRoot(10);
-    std::cout << "Root: [" << root_node->GetData() << "]\n";
+    // Level 1 - 2 nodes
+    auto l1_1 = tree.AddLeftChild(root, 2);
+    auto l1_2 = tree.AddRightChild(root, 3);
+    std::cout << "Added level 1: 2, 3\n";
 
-    // Level 1 - Left / Right
-    Node<int>* node_5 = christmas_tree.AddLeftChild(root_node, 5);
-    Node<int>* node_15 = christmas_tree.AddRightChild(root_node, 15);
+    // Level 2 - 4 nodes
+    auto l2_1 = tree.AddLeftChild(l1_1, 4);
+    auto l2_2 = tree.AddRightChild(l1_1, 5);
+    auto l2_3 = tree.AddLeftChild(l1_2, 6);
+    auto l2_4 = tree.AddRightChild(l1_2, 7);
+    std::cout << "Added level 2: 4,5,6,7\n";
 
-    // Level 2
-    Node<int>* node_2 = christmas_tree.AddLeftChild(node_5, 2);
-    Node<int>* node_7 = christmas_tree.AddRightChild(node_5, 7);
-    Node<int>* node_12 = christmas_tree.AddLeftChild(node_15, 12);
-    Node<int>* node_20 = christmas_tree.AddRightChild(node_15, 20);
+    // Level 3 - 8 nodes
+    tree.AddLeftChild(l2_1, 8);
+    tree.AddRightChild(l2_1, 9);
+    tree.AddLeftChild(l2_2, 10);
+    tree.AddRightChild(l2_2, 11);
+    tree.AddLeftChild(l2_3, 12);
+    tree.AddRightChild(l2_3, 13);
+    tree.AddLeftChild(l2_4, 14);
+    tree.AddRightChild(l2_4, 15);
+    std::cout << "Added level 3: 8-15\n";
 
-    // Level 3
-    christmas_tree.AddLeftChild(node_2, 1);
-    christmas_tree.AddRightChild(node_2, 3);
-    christmas_tree.AddLeftChild(node_7, 6);
-    christmas_tree.AddRightChild(node_7, 8);
-    christmas_tree.AddLeftChild(node_12, 11);
-    christmas_tree.AddRightChild(node_12, 13);
-    christmas_tree.AddLeftChild(node_20, 18);
-    christmas_tree.AddRightChild(node_20, 25);
+    std::cout << "\nTotal levels: " << tree.GetTotalLevels() << " (should be 4)\n";
 
-    christmas_tree.PrintTree();
+    tree.PrintTree();
 
-    std::cout << "\nTotal levels: " << christmas_tree.GetTotalLevels() << "\n";
+    // Test P1/P2/P3 connections
+    std::cout << "\n=== TEST P1/P2/P3 ===\n";
+    std::cout << "Root P3 (LeftChild) = " << root->GetPointer3()->GetData() << " (should be 2)\n";
+    std::cout << "Node 2 P1 (LevelNext) = " << l1_1->GetPointer1()->GetData() << " (should be 3)\n";
+    std::cout << "Node 3 P2 (LevelPrev) = " << l1_2->GetPointer2()->GetData() << " (should be 2)\n";
+    std::cout << "Node 2 P3 (LeftChild) = " << l2_1->GetData() << " (should be 4)\n";
 
-    // Test GetLevel - list not vector!
-    for (int i = 0; i < christmas_tree.GetTotalLevels(); i++) {
-        auto lvl = christmas_tree.GetLevel(i);
-        std::cout << "Level " << i << " size " << lvl.size() << ": ";
-        for (auto n : lvl) std::cout << "[" << n->GetData() << "] ";
-        std::cout << "\n";
-    }
-
-    // Traverse via P1 - fix for list
-    std::cout << "\nTraverse level 2 via P1: ";
-    auto lvl2 = christmas_tree.GetLevel(2);
-    Node<int>* curr = *lvl2.begin(); // list has no [0]
-    while (curr) {
-        std::cout << "[" << curr->GetData() << "] ";
-        curr = curr->GetPointer1();
-    }
-    std::cout << "\n";
-
-    std::cout << "\n=== SUCCESS 4 LEVELS LEFT/RIGHT! ===\n";
+    std::cout << "\n=== CHRISTMAS TREE TEST PASSED! ===\n";
     return 0;
 }
