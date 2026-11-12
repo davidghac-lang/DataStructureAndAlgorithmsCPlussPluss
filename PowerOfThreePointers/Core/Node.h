@@ -40,7 +40,6 @@ private:
     Node* P2 = nullptr;
     Node* P3 = nullptr;
     int level_index = 0;
-
 public:
     Node(TypeName input_data) : data(input_data) {}
 
