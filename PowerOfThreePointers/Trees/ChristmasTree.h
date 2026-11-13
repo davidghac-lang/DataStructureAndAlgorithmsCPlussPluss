@@ -340,7 +340,7 @@
 //    }
 //};
 #pragma once
-#include "../Core/Node.h"
+#include "Node.h"
 #include "LevelInfo.h"
 #include <iostream>
 #include <stack>
@@ -372,6 +372,7 @@ public:
         root_node->SetPointer1(nullptr);
         root_node->SetPointer2(nullptr);
         root_node->SetPointer3(nullptr);
+        root_node->SetParent(nullptr);
         std::list<Node<TypeName>*> first;
         first.push_back(root_node);
         level_stack.push(first);
@@ -379,7 +380,6 @@ public:
         return root_node;
     }
 
-    // For old test compatibility
     std::list<Node<TypeName>*> GetLevel(int l) {
         std::stack<std::list<Node<TypeName>*>> upper;
         while ((int)level_stack.size() > l + 1) {
@@ -403,7 +403,9 @@ public:
         child_node->SetPointer1(nullptr);
         child_node->SetPointer2(nullptr);
         child_node->SetPointer3(nullptr);
-        parent_node->SetPointer3(child_node); // P3 = first child
+        child_node->SetParent(parent_node);
+
+        parent_node->SetPointer3(child_node);
 
         int child_level = child_node->GetLevel();
         if (child_level == total_levels) {
@@ -415,38 +417,49 @@ public:
         else {
             std::stack<std::list<Node<TypeName>*>> upper;
             while ((int)level_stack.size() > child_level + 1) {
-                upper.push(level_stack.top()); level_stack.pop();
+                upper.push(level_stack.top());
+                level_stack.pop();
             }
-            auto target = level_stack.top(); level_stack.pop();
+            auto target = level_stack.top();
+            level_stack.pop();
             if (!target.empty()) {
                 Node<TypeName>* prev = target.back();
-                prev->SetPointer1(child_node); // P1 = next
-                child_node->SetPointer2(prev); // P2 = prev
+                prev->SetPointer1(child_node);
+                child_node->SetPointer2(prev);
             }
             target.push_back(child_node);
             level_stack.push(target);
-            while (!upper.empty()) { level_stack.push(upper.top()); upper.pop(); }
+            while (!upper.empty()) {
+                level_stack.push(upper.top());
+                upper.pop();
+            }
         }
         return child_node;
     }
 
     Node<TypeName>* AddRightChild(Node<TypeName>* parent_node, TypeName input_data) {
         if (!parent_node) return nullptr;
+
+        // FIXED SCOPE - first_child now always in scope
         Node<TypeName>* first_child = parent_node->GetPointer3();
-        if (first_child && first_child->GetPointer1()) return first_child->GetPointer1();
+
+        if (first_child && first_child->GetPointer1()) {
+            return first_child->GetPointer1();
+        }
 
         Node<TypeName>* child_node = new Node<TypeName>(input_data);
         child_node->SetLevel(parent_node->GetLevel() + 1);
         child_node->SetPointer1(nullptr);
         child_node->SetPointer2(nullptr);
         child_node->SetPointer3(nullptr);
+        child_node->SetParent(parent_node);
 
         if (!first_child) {
             parent_node->SetPointer3(child_node);
         }
         else {
-            first_child->SetPointer1(child_node); // P1 = next
-            child_node->SetPointer2(first_child); // P2 = prev
+            first_child->SetPointer1(child_node);
+            child_node->SetPointer2(first_child);
         }
 
         int child_level = child_node->GetLevel();
@@ -459,9 +472,11 @@ public:
         else {
             std::stack<std::list<Node<TypeName>*>> upper;
             while ((int)level_stack.size() > child_level + 1) {
-                upper.push(level_stack.top()); level_stack.pop();
+                upper.push(level_stack.top());
+                level_stack.pop();
             }
-            auto target = level_stack.top(); level_stack.pop();
+            auto target = level_stack.top();
+            level_stack.pop();
             if (!target.empty()) {
                 Node<TypeName>* prev = target.back();
                 if (prev != first_child) {
@@ -471,7 +486,10 @@ public:
             }
             target.push_back(child_node);
             level_stack.push(target);
-            while (!upper.empty()) { level_stack.push(upper.top()); upper.pop(); }
+            while (!upper.empty()) {
+                level_stack.push(upper.top());
+                upper.pop();
+            }
         }
         return child_node;
     }
@@ -483,6 +501,7 @@ public:
         std::stack<std::list<Node<TypeName>*>> temp = level_stack;
         std::stack<std::list<Node<TypeName>*>> rev;
         while (!temp.empty()) { rev.push(temp.top()); temp.pop(); }
+
         std::cout << "\n=== CHRISTMAS TREE V2 FAST (stack<list>) ===\n";
         int i = 0;
         while (!rev.empty()) {
@@ -498,5 +517,96 @@ public:
             rev.pop(); i++;
         }
         std::cout << "===========================================\n";
+    }
+
+    // NEW FANCY VISUAL - EXACTLY LIKE YOU WANT!
+    void PrintFancyTree() {
+        std::stack<std::list<Node<TypeName>*>> temp = level_stack;
+        std::stack<std::list<Node<TypeName>*>> rev;
+        while (!temp.empty()) { rev.push(temp.top()); temp.pop(); }
+
+        std::cout << "\n";
+        std::cout << "          [1]          \n";
+        std::cout << "          / \\          \n";
+        std::cout << "    [2] <-> [3]    \n";
+        std::cout << "     / \\   / \\     \n";
+        std::cout << "[4]<->[5] <-> [6]<->[7]\n";
+        std::cout << " / \\  / \\  / \\  / \\ \n";
+        std::cout << "8<->9<->10<->11<->12<->13<->14<->15\n";
+        std::cout << "\n--- REAL DATA FROM TREE ---\n";
+
+        int i = 0;
+        while (!rev.empty()) {
+            std::cout << "level " << i << ": ";
+            bool first = true;
+            for (auto n : rev.top()) {
+                if (!first) {
+                    // Show different <-> for same parent vs different parent
+                    auto prev = n->GetPointer2();
+                    if (prev && prev->GetParent() == n->GetParent()) {
+                        std::cout << "<->";
+                    }
+                    else {
+                        std::cout << " <-> "; // gap between families
+                    }
+                }
+                std::cout << "[" << n->GetData() << "]";
+                first = false;
+            }
+            std::cout << "\n";
+            // print / \ lines
+            if (!rev.empty() && rev.size() > 1) {
+                // crude slashes
+                auto list = rev.top();
+                if (i == 0) std::cout << "         / \\ \n";
+                else if (i == 1) std::cout << "      / \\   / \\ \n";
+                else if (i == 2) std::cout << "   / \\ / \\ / \\ / \\\n";
+            }
+            rev.pop(); i++;
+        }
+    }
+
+    // FIXED - Get only real children of this parent, not whole level
+    std::list<Node<TypeName>*> GetChildren(Node<TypeName>* parent_node) {
+        std::list<Node<TypeName>*> children;
+        if (!parent_node) return children;
+
+        Node<TypeName>* child = parent_node->GetPointer3(); // first child
+        while (child) {
+            if (child->GetParent() == parent_node) { // IMPORTANT! Check real parent
+                children.push_back(child);
+            }
+            else {
+                break; // Next nodes belong to other parent
+            }
+            child = child->GetPointer1(); // next
+        }
+        return children;
+    }
+
+    void PrintPathToRoot(Node<TypeName>* node) {
+        if (!node) {
+            std::cout << "NULL node!\n";
+            return;
+        }
+        std::cout << "Path: ";
+        Node<TypeName>* current = node;
+        while (current) {
+            std::cout << "[" << current->GetData() << "]";
+            current = current->GetParent();
+            if (current) std::cout << " -> ";
+        }
+        std::cout << " -> ROOT!\n";
+    }
+
+ 
+    std::list<Node<TypeName>*> GetPathToRoot(Node<TypeName>* node) {
+        std::list<Node<TypeName>*> path;
+        Node<TypeName>* current = node;
+        while (current) {
+            path.push_back(current);
+            current = current->GetParent();
+        }
+        return path;
     }
 };

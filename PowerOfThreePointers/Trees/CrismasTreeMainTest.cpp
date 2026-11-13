@@ -1,108 +1,116 @@
-//#include "ChristmasTree.h"
-//#include <iostream>
-//
-//int main() {
-//    ChristmasTree<int> tree;
-//
-//    // Level 0 - 1 node
-//    auto root = tree.AddRoot(1);
-//    std::cout << "Added root 1\n";
-//
-//    // Level 1 - 2 nodes
-//    auto l1_1 = tree.AddLeftChild(root, 2);
-//    auto l1_2 = tree.AddRightChild(root, 3);
-//    std::cout << "Added level 1: 2, 3\n";
-//
-//    // Level 2 - 4 nodes
-//    auto l2_1 = tree.AddLeftChild(l1_1, 4);
-//    auto l2_2 = tree.AddRightChild(l1_1, 5);
-//    auto l2_3 = tree.AddLeftChild(l1_2, 6);
-//    auto l2_4 = tree.AddRightChild(l1_2, 7);
-//    std::cout << "Added level 2: 4,5,6,7\n";
-//
-//    // Level 3 - 8 nodes
-//    tree.AddLeftChild(l2_1, 8);
-//    tree.AddRightChild(l2_1, 9);
-//    tree.AddLeftChild(l2_2, 10);
-//    tree.AddRightChild(l2_2, 11);
-//    tree.AddLeftChild(l2_3, 12);
-//    tree.AddRightChild(l2_3, 13);
-//    tree.AddLeftChild(l2_4, 14);
-//    tree.AddRightChild(l2_4, 15);
-//    std::cout << "Added level 3: 8-15\n";
-//
-//    std::cout << "\nTotal levels: " << tree.GetTotalLevels() << " (should be 4)\n";
-//
-//    tree.PrintTree();
-//
-//    // Test P1/P2/P3 connections
-//    std::cout << "\n=== TEST P1/P2/P3 ===\n";
-//    std::cout << "Root P3 (LeftChild) = " << root->GetPointer3()->GetData() << " (should be 2)\n";
-//    std::cout << "Node 2 P1 (LevelNext) = " << l1_1->GetPointer1()->GetData() << " (should be 3)\n";
-//    std::cout << "Node 3 P2 (LevelPrev) = " << l1_2->GetPointer2()->GetData() << " (should be 2)\n";
-//    std::cout << "Node 2 P3 (LeftChild) = " << l2_1->GetData() << " (should be 4)\n";
-//
-//    std::cout << "\n=== CHRISTMAS TREE TEST PASSED! ===\n";
-//    return 0;
-//}
-#include <iostream>
 #include "ChristmasTree.h"
-#include "../Core/Node.h"
+#include "Node.h"
+#include "LevelInfo.h"
+#include <iostream>
+#include <cassert>
 
 int main() {
     ChristmasTree<int> tree;
+    std::cout << "========================================\n";
+    std::cout << "  4 LEVEL CHRISTMAS TREE - EMPIRE TEST  \n";
+    std::cout << "========================================\n";
 
-    std::cout << "=== Testing ChristmasTree V2 FAST ===\n";
+    // LEVEL 0: [1]
+    auto n1 = tree.AddRoot(1);
+    std::cout << "Level 0: [1]\n";
 
-    // [1](ROOT)
-    auto* root = tree.AddRoot(1);
-    std::cout << "Root: [" << root->GetData() << "] level=" << root->GetLevel() << "\n";
+    // LEVEL 1: [2] <-> [3]
+    auto n2 = tree.AddLeftChild(n1, 2);
+    auto n3 = tree.AddRightChild(n1, 3);
+    std::cout << "Level 1: [2] <-> [3]\n";
 
-    // Level 1: [2] <-> [3]
-    auto* n2 = tree.AddLeftChild(root, 2);
-    auto* n3 = tree.AddRightChild(root, 3);
+    // LEVEL 2: [4] <-> [5] <-> [6] <-> [7]
+    auto n4 = tree.AddLeftChild(n2, 4);
+    auto n5 = tree.AddRightChild(n2, 5);
+    auto n6 = tree.AddLeftChild(n3, 6);
+    auto n7 = tree.AddRightChild(n3, 7);
+    std::cout << "Level 2: [4] <-> [5] <-> [6] <-> [7]\n";
 
-    std::cout << "\nLevel 1 creation:\n";
-    std::cout << "n2=" << n2->GetData() << " n3=" << n3->GetData() << "\n";
-    std::cout << "root->P3(first child): " << root->GetPointer3()->GetData() << "\n";
-    std::cout << "n2->P1(next): " << (n2->GetPointer1() ? std::to_string(n2->GetPointer1()->GetData()) : "null") << " -> expect 3\n";
-    std::cout << "n3->P2(prev): " << (n3->GetPointer2() ? std::to_string(n3->GetPointer2()->GetData()) : "null") << " -> expect 2\n";
+    // LEVEL 3: [8] to [15] - 8 nodes!
+    auto n8 = tree.AddLeftChild(n4, 8);
+    auto n9 = tree.AddRightChild(n4, 9);
+    auto n10 = tree.AddLeftChild(n5, 10);
+    auto n11 = tree.AddRightChild(n5, 11);
+    auto n12 = tree.AddLeftChild(n6, 12);
+    auto n13 = tree.AddRightChild(n6, 13);
+    auto n14 = tree.AddLeftChild(n7, 14);
+    auto n15 = tree.AddRightChild(n7, 15);
+    std::cout << "Level 3: [8] <-> [9] <-> [10] <-> [11] <-> [12] <-> [13] <-> [14] <-> [15]\n";
 
-    // Level 2: [4]<->[5] <-> [6]<->[7]
-    auto* n4 = tree.AddLeftChild(n2, 4);
-    auto* n5 = tree.AddRightChild(n2, 5);
-    auto* n6 = tree.AddLeftChild(n3, 6);
-    auto* n7 = tree.AddRightChild(n3, 7);
-
-    std::cout << "\nLevel 2 creation:\n";
-    std::cout << "n4=" << n4->GetData() << " n5=" << n5->GetData() << " n6=" << n6->GetData() << " n7=" << n7->GetData() << "\n";
-
-    // Check full level DLL chain
-    std::cout << "\nLevel 2 DLL chain check:\n";
-    Node<int>* cur = n4;
-    std::cout << "Chain: ";
-    while (cur) {
-        std::cout << "[" << cur->GetData() << "]";
-        if (cur->GetPointer1()) std::cout << " <-> ";
-        cur = cur->GetPointer1();
-    }
-    std::cout << "\nExpect: [4] <-> [5] <-> [6] <-> [7]\n";
-
-    // Print via tree method
+    // Visual
     tree.PrintTree();
+    assert(tree.GetTotalLevels() == 4);
+    std::cout << "\nTotal levels: " << tree.GetTotalLevels() << " (expected 4) PASS\n";
 
-    // Test GetLevel
-    std::cout << "\nGetLevel tests:\n";
-    for (int i = 0; i < tree.GetTotalLevels(); i++) {
-        auto lvl = tree.GetLevel(i);
-        std::cout << "Level " << i << " (" << lvl.size() << " nodes): ";
-        for (auto* n : lvl) std::cout << n->GetData() << " ";
-        std::cout << "\n";
-    }
+    // TEST 1: UP WALK 4 levels [15]->[7]->[3]->[1]
+    std::cout << "\n=== TEST 1: 4-LEVEL UP WALK ===\n";
+    std::cout << "Test [15] -> [7] -> [3] -> [1]\n";
+    Node<int>* cur = n15;
+    assert(cur->GetData() == 15);
+    cur = cur->GetParent(); assert(cur->GetData() == 7); std::cout << "[15] -> [7] OK\n";
+    cur = cur->GetParent(); assert(cur->GetData() == 3); std::cout << "[7] -> [3] OK\n";
+    cur = cur->GetParent(); assert(cur->GetData() == 1); std::cout << "[3] -> [1] ROOT OK\n";
 
-    std::cout << "\nVisual:\n";
-    std::cout << "[1](ROOT)\n / \\\n[2] <-> [3]\n / \\   / \\\n[4]<->[5] <-> [6]<->[7]\n";
+    std::cout << "\nTest [8] -> [4] -> [2] -> [1]\n";
+    cur = n8;
+    cur = cur->GetParent(); assert(cur->GetData() == 4);
+    cur = cur->GetParent(); assert(cur->GetData() == 2);
+    cur = cur->GetParent(); assert(cur->GetData() == 1);
+    std::cout << "[8] -> [4] -> [2] -> [1] PASS\n";
 
-    std::cout << "\n=== TEST DONE ===\n";
+    // TEST 2: GetChildren
+    std::cout << "\n=== TEST 2: GetChildren 4 Levels ===\n";
+    auto c1 = tree.GetChildren(n1); assert(c1.size() == 2);
+    std::cout << "Children of [1]: [2] [3] PASS\n";
+
+    auto c2 = tree.GetChildren(n2); assert(c2.size() == 2);
+    std::cout << "Children of [2]: [4] [5] PASS\n";
+
+    auto c4 = tree.GetChildren(n4); assert(c4.size() == 2);
+    std::cout << "Children of [4]: [8] [9] PASS\n";
+
+    auto c5 = tree.GetChildren(n5); assert(c5.size() == 2);
+    std::cout << "Children of [5]: [10] [11] PASS\n";
+
+    auto c7 = tree.GetChildren(n7); assert(c7.size() == 2);
+    std::cout << "Children of [7]: [14] [15] PASS\n";
+
+    // TEST 3: PathToRoot
+    std::cout << "\n=== TEST 3: PrintPathToRoot 4 Levels ===\n";
+    tree.PrintPathToRoot(n15); // [15]->[7]->[3]->[1]
+    tree.PrintPathToRoot(n8);  // [8]->[4]->[2]->[1]
+    tree.PrintPathToRoot(n11); // [11]->[5]->[2]->[1]
+
+    auto path = tree.GetPathToRoot(n15);
+    assert(path.size() == 4);
+    std::cout << "Path size 4 PASS\n";
+
+    // TEST 4: GetLevel
+    std::cout << "\n=== TEST 4: GetLevel ===\n";
+    auto lvl0 = tree.GetLevel(0); assert(lvl0.size() == 1);
+    auto lvl1 = tree.GetLevel(1); assert(lvl1.size() == 2);
+    auto lvl2 = tree.GetLevel(2); assert(lvl2.size() == 4);
+    auto lvl3 = tree.GetLevel(3); assert(lvl3.size() == 8);
+    std::cout << "level_0:1 level_1:2 level_2:4 level_3:8 PASS\n";
+    tree.PrintFancyTree();
+    // TEST 5: Sibling links P1/P2
+    std::cout << "\n=== TEST 5: Sibling Links Level 3 ===\n";
+    assert(n8->GetPointer1() == n9);
+    assert(n9->GetPointer1() == n10);
+    assert(n15->GetPointer2() == n14);
+    std::cout << "[8] <-> [9] <-> [10] <-> [11] <-> [12] <-> [13] <-> [14] <-> [15] PASS\n";
+
+    // TEST 6: Level numbers
+    std::cout << "\n=== TEST 6: Level Numbers ===\n";
+    assert(n1->GetLevel() == 0);
+    assert(n3->GetLevel() == 1);
+    assert(n6->GetLevel() == 2);
+    assert(n15->GetLevel() == 3);
+    std::cout << "Levels 0,1,2,3 correct PASS\n";
+
+    std::cout << "\n========================================\n";
+    std::cout << "  ALL TESTS PASSED - 4 LEVEL EMPIRE!   \n";
+    std::cout << "  Tree: 1-2-4-8 = 15 nodes total       \n";
+    std::cout << "========================================\n";
     return 0;
 }

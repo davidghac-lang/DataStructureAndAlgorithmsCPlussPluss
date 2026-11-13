@@ -1,0 +1,5 @@
+.vs/
+PowerOfThreePointers/.vs/
+*.vsidx
+test_tree
+*.o
