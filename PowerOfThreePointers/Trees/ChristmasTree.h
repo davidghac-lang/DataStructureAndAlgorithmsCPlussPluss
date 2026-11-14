@@ -501,6 +501,26 @@ public:
         std::stack<std::list<Node<TypeName>*>> temp = level_stack;
         std::stack<std::list<Node<TypeName>*>> rev;
         while (!temp.empty()) { rev.push(temp.top()); temp.pop(); }
+        std::cout << "\n=== CHRISTMAS TREE V2 FAST (stack<list>) ===\n";
+        int i = 0;
+        while (!rev.empty()) {
+            LevelInfo info(i, rev.top().size());
+            std::cout << "level_" << info.level_number << " (" << info.nodes_count << " nodes): ";
+            bool first = true;
+            for (auto n : rev.top()) {
+                if (!first) std::cout << " <-> ";
+                std::cout << "[" << n->GetData() << "]";
+                first = false;
+            }
+            std::cout << "\n";
+            rev.pop(); i++;
+        }
+        std::cout << "===========================================\n";
+    }
+    void PrintTree() {
+        std::stack<std::list<Node<TypeName>*>> temp = level_stack;
+        std::stack<std::list<Node<TypeName>*>> rev;
+        while (!temp.empty()) { rev.push(temp.top()); temp.pop(); }
 
         std::cout << "\n=== CHRISTMAS TREE V2 FAST (stack<list>) ===\n";
         int i = 0;
@@ -565,7 +585,6 @@ public:
             rev.pop(); i++;
         }
     }
-
     // FIXED - Get only real children of this parent, not whole level
     std::list<Node<TypeName>*> GetChildren(Node<TypeName>* parent_node) {
         std::list<Node<TypeName>*> children;
