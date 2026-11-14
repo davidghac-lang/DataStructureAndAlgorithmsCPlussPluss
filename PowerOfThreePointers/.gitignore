@@ -1,5 +1,10 @@
-.vs/
-PowerOfThreePointers/.vs/
-*.vsidx
-test_tree
+*.exe
 *.o
+[*
+main
+main.exe
+empire.exe
+brain.exe
+test_*
+.vs/
+*.vsidx
